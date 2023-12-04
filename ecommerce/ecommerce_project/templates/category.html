@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block metadescription %}
+{% if category %}
+{{category.description | truncatewords:155}}
+{% else %}
+Welcome to Siasha corner
+{% endif %}
+{% endblock %}
+{% block title %}
+{% if category %}
+{{category.name}} - SIASHA Corner
+{% else %}
+See our New collections
+{% endif %}
+{% endblock %}
+{% block body %}
+{% if category %}
+<div>
+    <div class="row my-row-class">
+        <div class="mx-auto">
+
+            <a href="{% url 'ecommerce_app:all_products_cat' %}"> Our Product Collections</a>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% if category %}
+<div class="mx-auto">
+    <img class="my-cat-image" src="{{category.image.url}}" alt="category.name" width="1350px" height="200px">
+
+</div>
+<br>
+<div>
+    <h1 class="text-center my-title"><b>{{category.name}}</b></h1>
+    <p class="text-justify">{{category.description}}</p>
+</div>
+{% else %}
+<div><img class="my-banner-image my-image-padding" src="{% static 'images/banner.jpg' %}" alt="our products"
+          width="1350px" height="200px"></div>
+<br>
+<div>
+    <h1 class="text-center my-title"><b> Our Product collections</b></h1>
+    <p class="text-justify">Proin quis nunc nisl. Duis lobortis tellus odio, vitae elementum mi fringilla ac. Morbi
+        vestibulum ligula tortor, et facilisis lacus condimentum sit amet. Nunc venenatis facilisis neque ut vestibulum.
+        Donec faucibus metus malesuada mollis sagittis. Curabitur ac nibh dui. Donec rhoncus ex iaculis odio aliquam, ut
+        cursus libero suscipit. Vestibulum placerat risus eleifend placerat feugiat. Sed congue ornare odio vel
+        cursus. </p>
+
+</div>
+
+{% endif %}
+{{product}}
+<div class="container">
+    <div class="row">
+        {% for p in product %}
+        <div class="my-bottom-margin col-3 col-3 col-3 ">
+            <div class="card text-center border-0" style="min-width:18rem; ">
+                <a href="{{p.get_url}}"><img class="card-img-top  " src="{{p.image.url}}" alt="{{p.name}}"
+                                             style="height:200px;"> </a>
+
+
+                <div class="card-body">
+                    <h4 class="card-title">{{p.name}}</h4>
+                    <p>{{p.price}}</p>
+                    {% if p.stock <= 0 %}
+                    <p><b style="color:red;">Out of stock</b></p>
+                    {% else %}
+                    <a href="{% url 'cart_app:add_cart' p.id %}" class="btn btn-primary">Add to Cart</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="auto-max">
+        {% if product.paginator.num_pages > 1 %}
+        <div class="text-center">
+            {% for pg in product.paginator.page_range %}
+
+            <a href="?page={{pg}}"
+               class="btn btn-light btn-sm {% if product.number == pg %} active {% endif %}}">{{pg}}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    <br>
+</div>
+{% endblock %}
+
+
+

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block metadescription %}
+We have vairety of products
+{% endblock %}
+{% block title %}
+Search
+{% endblock %}
+{% block body %}
+<div>
+    <p class="text-center my-search-text"> You have searched for <b>{{query}}</b></p>
+</div>
+<div class="container">
+    <div class="row">
+        {% for p in product %}
+        <div class="my-bottom-margin col-3 col-3 col-3 ">
+            <div class="card text-center border-0" style="min-width:18rem; ">
+                <a href="{{p.get_url}}"><img class="card-img-top  " src="{{p.image.url}}" alt="{{p.name}}"
+                                             style="height:200px;"> </a>
+                <div class="card-body">
+                    <h4 class="card-title">{{p.name}}</h4>
+                    <p>{{p.price}}</p>
+                    {% if p.stock <= 0 %}
+                    <p><b style="color:red;">Out of stock</b></p>
+                    {% else %}
+                    <a href="#" class="btn btn-primary">Add to Cart</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>
+        <h2 style="color:red;" class="text-center my-search-text">No result found</h2> </p>
+        {% endfor %}
+    </div>
+    <div class="auto-max">
+        {% if product.paginator.num_pages > 1 %}
+        <div class="text-center">
+            {% for pg in product.paginator.page_range %}
+            <a href="?page={{pg}}"
+               class="btn btn-light btn-sm {% if product.number == pg %} active {% endif %}}">{{pg}}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    <br>
+</div>
+{% endblock %}
